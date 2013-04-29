@@ -17,7 +17,7 @@ def connect(request):
     if request.GET.get("code"):
         code = request.GET.get("code")
         token = linkedin_api.get_auth_token(code, "http://%s/linkedin/connect" % request.get_host())
-        profile_info = linkedin_api.get_profile(token, fields=["first-name", "last-name", "id", "headline", "picture-url", "email-address"])
+        profile_info = linkedin_api.get_profile(token, fields=["first-name", "last-name", "id", "headline", "picture-url", "email-address", "site-standard-profile-request"])
         logger.error(profile_info)
 
         user, created = models.UserProfile.objects.get_or_create(linkedin_id=profile_info['id'], oauth_code=code)
@@ -37,6 +37,9 @@ def connect(request):
 
         if 'headline' in profile_info:
             user.headline = profile_info['headline']
+
+        if 'siteStandardProfileRequest' in profile_info:
+            user.linkedin_profile_url = profile_info['siteStandardProfileRequest']['url']
 
         user.oauth_token = token
         user.oauth_code = code

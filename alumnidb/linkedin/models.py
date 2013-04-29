@@ -30,6 +30,7 @@ class LinkedInUserManager(BaseUserManager):
 
 class UserProfile(AbstractBaseUser):
     linkedin_id = models.CharField(max_length=255, unique=True)
+    linkedin_profile_url = models.CharField(max_length=255, blank=True, null=True)
     oauth_token = models.CharField(max_length=255)
     oauth_code = models.CharField(max_length=255)
     date_joined = models.DateTimeField(auto_now_add=True)

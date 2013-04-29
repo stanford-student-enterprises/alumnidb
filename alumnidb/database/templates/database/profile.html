@@ -16,6 +16,10 @@
     </div>
     <div class="span7">
         <h1> {{user.first_name}} {{ user.last_name}}{% if user.sse_position %}&nbsp;<small>{{ user.sse_position }} {{ user.sse_year }}</smalL>{% endif %}</h1>
+
+        {% if user.linkedin_profile_url %}
+            <p><a href="{{ user.linkedin_profile_url }}" class="btn btn-info">Linkedin Profile</a></p>
+        {% endif %}
         
         <ul class="unstyled">
         {% if user.headline %}
