@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.db.models import Q
 
 from alumnidb.linkedin.models import UserProfile
 from alumnidb.linkedin.forms import UserProfileForm
@@ -44,3 +45,19 @@ def edit_profile(request):
 
 def profile(request, user_id):
     pass
+
+def search(request):
+    q = request.GET.get("q", "")
+    results = []
+
+    for qw in q.split():
+        results.extend(UserProfile.objects.filter(
+            Q(first_name__icontains=qw) |
+            Q(last_name__icontains=qw) |
+            Q(headline__icontains=qw) |
+            Q(sse_position__icontains=qw) |
+            Q(sse_year__icontains=qw)
+        ))
+    
+    return render_to_response("database/list.html", {"users": results, "title": "Search results for %s" % q},
+                            context_instance=RequestContext(request))

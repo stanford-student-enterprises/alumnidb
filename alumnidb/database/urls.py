@@ -11,4 +11,5 @@ urlpatterns = patterns('alumnidb.database.views',
     url(r'profile/(?P<user_id>\d+)/$', 'profile'),
     url(r'profile/$', 'my_profile'),
     url(r'authenticate/$', 'authenticate'),
+    url(r'search/$', 'search'),
 )

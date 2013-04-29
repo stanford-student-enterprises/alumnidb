@@ -21,6 +21,8 @@
     <!--[if lt IE 9]>
         <script src="../assets/js/html5shiv.js"></script>
     <![endif]-->
+    {% block head_js %}
+    {% endblock %}
 
     </head>
 
@@ -40,9 +42,10 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="/db/profile/current/">Current Employees</a></li>
                     <li><a href="/db/profile/all/">All Employees</a></li>
+                    <li><a href="/db/profile/">My Profile</a></li>
                 </ul>
                 <form class="navbar-form pull-right" action="/db/search/" method="get">
-                    <input class="span2" type="text" placeholder="Name, Company, ...">
+                    <input class="span2" type="text" name="q" placeholder="Name, Company, ...">
                     <button type="submit" class="btn">Search</button>
                 </form>
             </div><!--/.nav-collapse -->

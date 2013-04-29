@@ -35,13 +35,16 @@ def connect(request):
         if 'emailAddress' in profile_info:
             user.email = profile_info['emailAddress']
 
+        if 'headline' in profile_info:
+            user.headline = profile_info['headline']
+
         user.oauth_token = token
         user.oauth_code = code
         user.save()
 
         tasks.crawl_linkedin(user)
 
-        return HttpResponseRedirect('/db/')
+        return HttpResponseRedirect('/db/profile/')
     else:
         return HttpResponse(status=404)
 
