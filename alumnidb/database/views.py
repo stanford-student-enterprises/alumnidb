@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.db.models import Q
@@ -44,7 +44,9 @@ def edit_profile(request):
     return render_to_response("database/edit_profile.html", {"form": form}, context_instance=RequestContext(request))
 
 def profile(request, user_id):
-    pass
+    user = get_object_or_404(UserProfile, pk=user_id)
+
+    return render_to_response("database/profile.html", {"user": user}, context_instance=RequestContext(request))
 
 def search(request):
     q = request.GET.get("q", "")
@@ -59,5 +61,5 @@ def search(request):
             Q(sse_year__icontains=qw)
         ))
     
-    return render_to_response("database/list.html", {"users": results, "title": "Search results for %s" % q},
+    return render_to_response("database/list.html", {"users": results, "title": "Search results for '%s'" % q},
                             context_instance=RequestContext(request))

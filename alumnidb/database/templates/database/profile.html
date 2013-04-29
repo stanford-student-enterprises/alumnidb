@@ -1,19 +1,32 @@
 {% extends "database/base.html" %}
 
 {% block content %}
+
+{% if request.user == user %}
 <div class="row">
     <div class="span2">
         <a class="btn" href="/db/profile/edit/">Edit Profile</a>
     </div>
 </div>
+{% endif %}
 <br />
 <div class="row">
     <div class="span1 well">
         <img src="{{ user.picture_url }}" class="img">
     </div>
     <div class="span7">
-        <h1> {{user.first_name}} {{ user.last_name}}{% if user.sse_position %}&nbsp;<small>{{ user.sse_position }}, {{ user.sse_year }}</smalL>{% endif %}</h1>
+        <h1> {{user.first_name}} {{ user.last_name}}{% if user.sse_position %}&nbsp;<small>{{ user.sse_position }} {{ user.sse_year }}</smalL>{% endif %}</h1>
         
+        <ul class="unstyled">
+        {% if user.headline %}
+            <li><strong>Current Job: </strong>{{ user.headline }}</li>
+        {% endif %}
+        {% if user.phone %}
+            <li><strong>Phone: </strong>{{ user.phone }}</li>
+        {% endif %}
+        {% if user.email %}
+            <li><strong>Email: </strong>{{ user.email}}</li>
+        {% endif %}
     </div>
 </div>
 

@@ -38,9 +38,12 @@ class UserProfile(AbstractBaseUser):
     picture_url = models.CharField(max_length=255, blank=True, null=True)
     headline = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
-    sse_position = models.CharField(max_length=255, blank=True, null=True)
-    sse_year = models.IntegerField(blank=True, null=True)
+    phone = models.CharField(max_length=255, blank=True, null=True)
+    sse_position = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Position")
+    sse_year = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Year")
     is_current = models.BooleanField(default=True)
+    receive_emails = models.BooleanField(default=True)
+
     objects = LinkedInUserManager()
 
     USERNAME_FIELD = 'linkedin_id'
