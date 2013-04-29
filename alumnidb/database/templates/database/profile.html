@@ -28,6 +28,9 @@
         {% if user.phone %}
             <li><strong>Phone: </strong>{{ user.phone }}</li>
         {% endif %}
+        {% if user.sse_email %}
+            <li><strong>SSE Email: </strong>{{ user.sse_email }}</li>
+        {% endif %}
         {% if user.email %}
             <li><strong>Email: </strong>{{ user.email}}</li>
         {% endif %}

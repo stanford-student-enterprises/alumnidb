@@ -42,6 +42,7 @@ class UserProfile(AbstractBaseUser):
     phone = models.CharField(max_length=255, blank=True, null=True)
     sse_position = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Position")
     sse_year = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Year")
+    sse_email = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Email")
     is_current = models.BooleanField(default=True)
     receive_emails = models.BooleanField(default=True)
 
@@ -53,4 +54,12 @@ class UserProfile(AbstractBaseUser):
     def __unicode__(self):
         return "%s %s" % (self.first_name, self.last_name)
 
-    
+    def primary_email(self):
+        if self.is_current:
+            if self.sse_email:
+                return self.sse_email
+            else:
+                return self.email
+        else:
+            return self.email
+        return None    
