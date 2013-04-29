@@ -1,24 +1,28 @@
 {% extends "database/base.html" %}
 
 {% block content %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <td>First Name</td>
-            <td>Last Name</td>
-            <td>Email</td>
-            <td>SSE Position</td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.first_ name}}</td>
-            <td>{{ user.last_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.sse_position }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row">
+    <div class="span12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>Email</td>
+                    <td>SSE Position</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.first_name}}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.sse_position }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

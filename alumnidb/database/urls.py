@@ -6,6 +6,8 @@ from django.conf.urls.static import static
 
 urlpatterns = patterns('alumnidb.database.views',
     url(r'profile/edit/$', 'edit_profile'),
+    url(r'profile/all/$', 'all'),
+    url(r'profile/current/$', 'current'),
     url(r'profile/(?P<user_id>\d+)/$', 'profile'),
     url(r'profile/$', 'my_profile'),
     url(r'authenticate/$', 'authenticate'),

@@ -1,0 +1,15 @@
+{% extends "database/base.html" %}
+
+{% block content %}
+<h1>Edit Your Profile</h1>
+<div class="row">
+    <div class="span6">
+        <form action="/db/profile/edit/" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit" class="btn"/>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
