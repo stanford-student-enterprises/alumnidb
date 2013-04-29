@@ -21,7 +21,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 print >> sys.stderr, sys.path
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alumnidb.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alumnidb.prod_settings")
 
 ALLDIRS = ['/home/sse/roster/website/venv/lib/python2.7/site-packages']
 
