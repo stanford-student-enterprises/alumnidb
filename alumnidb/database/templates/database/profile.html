@@ -1,0 +1,20 @@
+{% extends "database/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="span2">
+        <a class="btn" href="/db/profile/edit/">Edit Profile</a>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="span1 well">
+        <img src="{{ user.picture_url }}" class="img">
+    </div>
+    <div class="span4">
+        <h1> {{user.first_name}} {{ user.last_name}}</h1>
+        {% if user.sse_position %}<small>{{ user.sse_position }}, {{ user.sse_year }}</smalL>{% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'alumnidb.database.views.home', name='home'),
     url(r'^linkedin/', include('alumnidb.linkedin.urls')),
+    url(r'^db/', include('alumnidb.database.urls')),
     # url(r'^alumnidb/', include('alumnidb.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
