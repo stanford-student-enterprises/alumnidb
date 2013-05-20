@@ -9,6 +9,7 @@ ADMINS = (
 )
 
 AUTH_USER_MODEL = "linkedin.UserProfile"
+LOGIN_URL = '/linkedin/authenticate/'
 
 LINKEDIN_CLIENT_ID = "ppryv46gee03"
 LINKEDIN_SECRET_KEY = "nAJjHkT7pvHKPNet"
@@ -96,6 +97,7 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -127,7 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'alumnidb.database',
@@ -153,13 +155,27 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
         }
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'propagate': True,
         },
+        'alumnidb.linkedin.views': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'alumnidb.linkedin.lib.linkedin_api': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True
+        }
     }
 }

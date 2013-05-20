@@ -4,7 +4,7 @@ import logging
 
 from django.conf import settings
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 def get_profile(token, fields=['id', 'first-name', 'last-name', 'email-address']):
     data = {'oauth2_access_token': token,
@@ -13,7 +13,7 @@ def get_profile(token, fields=['id', 'first-name', 'last-name', 'email-address']
     r = requests.get('https://api.linkedin.com/v1/people/~%s' % fields_str, params=data)
     r.raise_for_status()
     
-    logger.debug("Profile response: %s" % r.json())
+    logger.info("Profile response: %s" % r.json())
 
     return r.json()
 
@@ -40,7 +40,7 @@ def get_auth_token(code, redirect_uri):
     r = requests.post('https://www.linkedin.com/uas/oauth2/accessToken', params=data)
     response = r.json()
 
-    logger.debug("Response: %s", response)
+    logger.error("Response: %s", response)
 
 
     return response["access_token"]

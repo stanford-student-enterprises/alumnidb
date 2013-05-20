@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import simplejson
 from django.core import serializers
 
@@ -18,6 +18,14 @@ class LinkedInUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def create_superuser(self, linkedin_id, password, **other_fields):
+        user = self.model(linkedin_id=linkedin_id)
+
+        user.set_password(password)
+
+        user.save(using=self._db)
+        return user
+
     def get_or_create(self, linkedin_id=None, oauth_code=None):
         try:
             user = self.get(linkedin_id=linkedin_id)
@@ -28,11 +36,11 @@ class LinkedInUserManager(BaseUserManager):
             return self.create(linkedin_id, oauth_code), True
 
 
-class UserProfile(AbstractBaseUser):
+class UserProfile(AbstractBaseUser, PermissionsMixin):
     linkedin_id = models.CharField(max_length=255, unique=True)
     linkedin_profile_url = models.CharField(max_length=255, blank=True, null=True)
-    oauth_token = models.CharField(max_length=255)
-    oauth_code = models.CharField(max_length=255)
+    oauth_token = models.CharField(max_length=255, null=True, blank=True)
+    oauth_code = models.CharField(max_length=255, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -45,11 +53,10 @@ class UserProfile(AbstractBaseUser):
     sse_email = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Email")
     is_current = models.BooleanField(default=True)
     receive_emails = models.BooleanField(default=True)
-
+    is_staff = models.BooleanField(default=False)
     objects = LinkedInUserManager()
 
     USERNAME_FIELD = 'linkedin_id'
-    REQUIRED_FIELDS = ['oauth_code']
 
     def __unicode__(self):
         return "%s %s" % (self.first_name, self.last_name)

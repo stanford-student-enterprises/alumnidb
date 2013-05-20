@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q
 
 from alumnidb.linkedin.models import UserProfile
-from alumnidb.linkedin.forms import UserProfileForm
+from alumnidb.linkedin.forms import UserProfileForm, AdminUserProfileForm
 
 def home(request):
     return render_to_response("database/home.html")
@@ -41,8 +41,22 @@ def edit_profile(request):
     else:
         form = UserProfileForm(instance=user)
 
-    return render_to_response("database/edit_profile.html", {"form": form}, context_instance=RequestContext(request))
+    return render_to_response("database/edit_profile.html", {"form": form, "action":"/db/profile/edit/"}, context_instance=RequestContext(request))
 
+def admin_edit_profile(request, user_id):
+    user = get_object_or_404(UserProfile, pk=int(user_id))
+    if not request.user.is_superuser:
+        return HttpResponse(status=401)
+
+    if request.method == 'POST':
+        form = AdminUserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save()
+            return HttpResponseRedirect('/db/profile/%s/' % user_id)
+    else:
+        form = AdminUserProfileForm(instance=user)
+
+    return render_to_response("database/edit_profile.html", {"form": form, "action":"/db/profile/%s/edit/" % user_id}, context_instance=RequestContext(request))
 def profile(request, user_id):
     user = get_object_or_404(UserProfile, pk=user_id)
 

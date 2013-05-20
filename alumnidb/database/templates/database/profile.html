@@ -3,11 +3,17 @@
 {% block content %}
 
 {% if request.user == user %}
-<div class="row">
-    <div class="span2">
-        <a class="btn" href="/db/profile/edit/">Edit Profile</a>
+    <div class="row">
+        <div class="span2">
+            <a class="btn" href="/db/profile/edit/">Edit Profile</a>
+        </div>
     </div>
-</div>
+{% elif request.user.is_superuser %}
+    <div class="row">
+        <div class="span2">
+            <a class="btn" href="/db/profile/{{ user.pk }}/edit/">Edit Profile</a>
+        </div>
+    </div>
 {% endif %}
 <br />
 <div class="row">

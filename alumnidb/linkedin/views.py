@@ -47,6 +47,8 @@ def connect(request):
 
         tasks.crawl_linkedin(user)
 
+        if request.GET.get("next"):
+            return HttpResponseRedirect(request.GET.get("next"))
         return HttpResponseRedirect('/db/profile/')
     else:
         return HttpResponse(status=404)
@@ -54,6 +56,8 @@ def connect(request):
 
 def authenticate(request):
     url = linkedin_api.get_auth_code_url("http://%s/linkedin/connect" % request.get_host())
-        
-    logger.debug("Redirecting to: %s" % url)
+    #if request.GET.get("next"):
+    #   url += "?next=%s" % request.GET.get("next")
+
+    logger.error(url)
     return HttpResponseRedirect(url)

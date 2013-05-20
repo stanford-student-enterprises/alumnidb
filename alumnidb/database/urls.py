@@ -9,7 +9,7 @@ urlpatterns = patterns('alumnidb.database.views',
     url(r'profile/all/$', 'all'),
     url(r'profile/current/$', 'current'),
     url(r'profile/(?P<user_id>\d+)/$', 'profile'),
+    url(r'profile/(?P<user_id>\d+)/edit/$', 'admin_edit_profile'),
     url(r'profile/$', 'my_profile'),
-    url(r'authenticate/$', 'authenticate'),
     url(r'search/$', 'search'),
 )
