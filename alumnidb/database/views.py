@@ -190,7 +190,8 @@ def filter(request):
             logger.debug(year_results)
 
             results = is_current_results
-            results &= year_results
+            if data['start_year'] or data['end_year']:
+                results &= year_results
     else:
         form = FilterForm()
 
