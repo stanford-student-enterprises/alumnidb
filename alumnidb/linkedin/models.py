@@ -76,6 +76,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
+    def sse_positions(self):
+        return SSEPosition.objects.filter(user=self).order_by("-start_year")
+
 class SSEPosition(models.Model):
     YEAR_CHOICES = [("%d" % y, "%d" % y) for y in range(2001, 2025)]
     start_year = models.CharField(max_length=4, choices=YEAR_CHOICES)
