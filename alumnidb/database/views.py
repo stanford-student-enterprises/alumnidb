@@ -75,7 +75,7 @@ def edit_sse_position(request, user_id, position_id):
     if user != request.user and not request.user.is_superuser:
         return HttpResponse(status=401)
     if position.user != user:
-        return HttpResponse(status=401)
+        return HttpResponse(status=404)
 
     if request.method == 'POST':
         form = SSEPositionForm(request.POST, instance=position)
@@ -97,7 +97,7 @@ def delete_sse_position(request, user_id, position_id):
     if user != request.user and not request.user.is_superuser:
         return HttpResponse(status=401)
     if position.user != user:
-        return HttpResponse(status=401)
+        return HttpResponse(status=404)
 
     position.delete()
 
