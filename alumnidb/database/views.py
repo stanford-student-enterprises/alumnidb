@@ -125,16 +125,29 @@ def profile(request, user_id):
 
 def search(request):
     q = request.GET.get("q", "")
-    results = []
+    results = set()
 
     for qw in q.split():
-        results.extend(UserProfile.objects.filter(
+        results |= set(UserProfile.objects.filter(
             Q(first_name__icontains=qw) |
             Q(last_name__icontains=qw) |
-            Q(headline__icontains=qw) |
-            Q(sse_position__icontains=qw) |
-            Q(sse_year__icontains=qw)
+            Q(headline__icontains=qw)
         ))
+
+        q_object = Q(start_year__lte=qw)
+        q_object.add(Q(end_year__gte=qw) | Q(title__icontains=qw), Q.AND)
+        sse_positions = SSEPosition.objects.filter(q_object)
+
+        for sse_position in sse_positions:
+            results.add(sse_position.user)
+
+        experiences = Experience.objects.filter(
+            Q(title__icontains=qw) |
+            Q(organization__icontains=qw)
+        )
+        for experience in experiences:
+            results.add(experience.user)
+
     
     return render_to_response("database/list.html", {"users": results, "title": "Search results for '%s'" % q},
                             context_instance=RequestContext(request))
