@@ -23,6 +23,16 @@
 </div>
 <div class="row">
     <div class="span12">
+        <h4>Emails</h4>
+        <div class="well">
+            {% for user in users %}
+                {{ user.primary_email }}, 
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="span12">
         <table id="sortTable" class="table table-striped table-hover">
             <thead>
                 <tr>

@@ -7,6 +7,9 @@ from alumnidb.linkedin.models import UserProfile, SSEPosition, Experience
 from alumnidb.linkedin.forms import UserProfileForm, AdminUserProfileForm, SSEPositionForm
 from alumnidb.database.forms import FilterForm
 
+import logging
+logger = logging.getLogger(__name__)
+
 def home(request):
     return render_to_response("database/home.html")
 
@@ -154,29 +157,33 @@ def search(request):
                             context_instance=RequestContext(request))
 
 def filter(request):
-    results = {}
+    results = set()
+    logger.debug("Test")
     if request.method == 'POST':
         form = FilterForm(request.POST)
         if form.is_valid():
+            data = form.cleaned_data
             is_current_results = set()
             q_object = Q()
-            if form.is_current and not form.is_not_current:
+            if data['is_current'] and not data['is_not_current']:
                 q_object.add(Q(is_current=True), Q.AND)
-            elif not form.is_current and form.is_not_current:
+            elif not data['is_current'] and data['is_not_current']:
                 q_object.add(Q(is_current=False), Q.AND)
-            is_current_results |= UserProfile.objects.filter(q_object)
+            is_current_results |= set(UserProfile.objects.filter(q_object))
 
             year_results = set()
             q_object = Q()
-            if form.start_year:
-                q_object.add(Q(start_year__lte=form.start_year), Q.AND)
-            if form.end_year:
-                q_object.add(Q(end_year__gte=form.end_year), Q.AND)
+            if data['start_year']:
+                q_object.add(Q(end_year__gte=data['start_year']), Q.AND)
+            if data['end_year']:
+                q_object.add(Q(start_year__lte=data['end_year']), Q.AND)
             sse_positions = SSEPosition.objects.filter(q_object)
             for position in sse_positions:
                 year_results.add(position.user)
+            logger.debug(is_current_results)
+            logger.debug(year_results)
 
-            results &= is_current_results
+            results = is_current_results
             results &= year_results
     else:
         form = FilterForm()

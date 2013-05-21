@@ -179,6 +179,11 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True
+        }, 
+        'alumnidb.database.views': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True
         }
     }
 }
