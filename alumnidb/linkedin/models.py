@@ -48,8 +48,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     headline = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=255, blank=True, null=True)
-    sse_position = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Position")
-    sse_year = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Year")
     sse_email = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Email")
     is_current = models.BooleanField(default=True)
     receive_emails = models.BooleanField(default=True)
@@ -70,6 +68,23 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         else:
             return self.email
         return None
+
+    def last_sse_position(self):
+        sse_positions = SSEPosition.objects.filter(user=self).order_by("-start_year")
+        if sse_positions.count():
+            return sse_positions[0]
+        else:
+            return None
+
+class SSEPosition(models.Model):
+    YEAR_CHOICES = [("%d" % y, "%d" % y) for y in range(2001, 2025)]
+    start_year = models.CharField(max_length=4, choices=YEAR_CHOICES)
+    end_year = models.CharField(max_length=4, choices=YEAR_CHOICES)
+    title = models.CharField(max_length=255)
+    user = models.ForeignKey("UserProfile")
+
+    def __unicode__(self):
+        return "%s - %s from %s to %s" % (self.user, self.title, self.start_year, self.end_year)
 
 class Experience(models.Model):
     linkedin_id = models.CharField(max_length=50, null=True, default=None, blank=True)

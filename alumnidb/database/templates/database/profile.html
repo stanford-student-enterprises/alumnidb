@@ -4,14 +4,18 @@
 
 {% if request.user == user %}
     <div class="row">
-        <div class="span2">
+        <div class="span4">
             <a class="btn" href="/db/profile/edit/">Edit Profile</a>
+            &nbsp;
+            <a class="btn" href="/db/profile/{{ user.pk }}/sse_positions/add/">Add SSE Position</a>
         </div>
     </div>
 {% elif request.user.is_superuser %}
     <div class="row">
-        <div class="span2">
+        <div class="span4">
             <a class="btn" href="/db/profile/{{ user.pk }}/edit/">Edit Profile</a>
+            &nbsp;
+            <a class="btn" href="/db/profile/{{ user.pk }}/sse_positions/add/">Add SSE Position</a>
         </div>
     </div>
 {% endif %}
@@ -21,7 +25,7 @@
         <img src="{{ user.picture_url }}" class="img">
     </div>
     <div class="span7">
-        <h1> {{user.first_name}} {{ user.last_name}}{% if user.sse_position %}&nbsp;<small>{{ user.sse_position }} {{ user.sse_year }}</smalL>{% endif %}</h1>
+        <h1> {{user.first_name}} {{ user.last_name}}{% if user.last_sse_position %}&nbsp;<small>{{ user.last_sse_position.title }}</smalL>{% endif %}</h1>
 
         {% if user.linkedin_profile_url %}
             <p><a href="{{ user.linkedin_profile_url }}" class="btn btn-info">Linkedin Profile</a></p>
@@ -39,6 +43,16 @@
         {% endif %}
         {% if user.email %}
             <li><strong>Email: </strong>{{ user.email}}</li>
+        {% endif %}
+            <br />
+        {% if sse_positions %}
+            <li><strong>SSE Positions</strong>
+                <ul class="unstyled">
+                    {% for position in sse_positions %}
+                        <li>{{ position.title }}, {{ position.start_year }} - {{ position.end_year }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
         {% endif %}
     </div>
 </div>

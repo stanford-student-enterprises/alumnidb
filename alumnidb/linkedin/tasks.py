@@ -14,7 +14,6 @@ from alumnidb.linkedin.lib import linkedin_api
 logger = logging.getLogger(__name__)
 
 
-    
 @task()
 def crawl_linkedin(user):
     fields = ["id","first-name","last-name","headline","email-address","picture-url","positions"]

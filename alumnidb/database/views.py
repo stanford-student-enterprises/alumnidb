@@ -3,8 +3,8 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 
-from alumnidb.linkedin.models import UserProfile
-from alumnidb.linkedin.forms import UserProfileForm, AdminUserProfileForm
+from alumnidb.linkedin.models import UserProfile, SSEPosition
+from alumnidb.linkedin.forms import UserProfileForm, AdminUserProfileForm, SSEPositionForm
 
 def home(request):
     return render_to_response("database/home.html")
@@ -28,7 +28,12 @@ def current(request):
 def my_profile(request):
     user = request.user
 
-    return render_to_response("database/profile.html", {"user": user}, context_instance=RequestContext(request))
+    sse_positions = SSEPosition.objects.filter(user=user).order_by("-start_year")
+
+    return render_to_response("database/profile.html", 
+                            {"user": user,
+                            "sse_positions": sse_positions}, 
+                            context_instance=RequestContext(request))
 
 def edit_profile(request):
     user = request.user
@@ -42,6 +47,25 @@ def edit_profile(request):
         form = UserProfileForm(instance=user)
 
     return render_to_response("database/edit_profile.html", {"form": form, "action":"/db/profile/edit/"}, context_instance=RequestContext(request))
+
+def add_sse_position(request, user_id):
+    user = get_object_or_404(UserProfile, pk=int(user_id))
+    if user != request.user and not request.user.is_superuser:
+        return HttpResponse(status=401)
+
+    if request.method == 'POST':
+        form = SSEPositionForm(request.POST)
+        if form.is_valid():
+            position = form.save(commit=False)
+            position.user = user
+            position.save()
+            return HttpResponseRedirect('/db/profile/')
+    else:
+        form = SSEPositionForm()
+
+    return render_to_response("database/add_sse_position.html", 
+                            {"form": form},
+                            context_instance=RequestContext(request))
 
 def admin_edit_profile(request, user_id):
     user = get_object_or_404(UserProfile, pk=int(user_id))
@@ -57,10 +81,16 @@ def admin_edit_profile(request, user_id):
         form = AdminUserProfileForm(instance=user)
 
     return render_to_response("database/edit_profile.html", {"form": form, "action":"/db/profile/%s/edit/" % user_id}, context_instance=RequestContext(request))
+
 def profile(request, user_id):
     user = get_object_or_404(UserProfile, pk=user_id)
 
-    return render_to_response("database/profile.html", {"user": user}, context_instance=RequestContext(request))
+    sse_positions = SSEPosition.objects.filter(user=user).order_by("-start_year")
+
+    return render_to_response("database/profile.html", 
+                            {"user": user,
+                            "sse_positions": sse_positions}, 
+                            context_instance=RequestContext(request))
 
 def search(request):
     q = request.GET.get("q", "")
