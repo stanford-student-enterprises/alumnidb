@@ -69,4 +69,43 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
                 return self.email
         else:
             return self.email
-        return None    
+        return None
+
+class Experience(models.Model):
+    linkedin_id = models.CharField(max_length=50, null=True, default=None, blank=True)
+    organization = models.CharField(max_length=100)
+    start_year = models.IntegerField(null=True, blank=True)
+    start_month = models.IntegerField(null=True, blank=True)
+    end_year = models.IntegerField(null=True, blank=True)
+    end_month = models.IntegerField(null=True, blank=True)
+    summary = models.TextField(blank=True, null=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    user = models.ForeignKey("UserProfile")
+
+    class Meta:
+        ordering = ["start_year", "start_month"]
+
+    def __unicode__(self):
+        return "%s - %s from %s" % (self.user, self.organization, self.start_year)
+
+    def json_dict(self):
+        d = {}
+        d["linkedin_id"] = self.linkedin_id
+        d["id"] = self.pk
+        d["type"] = "experience"
+        if self.start_year:
+            d["start_year"] = self.start_year
+        if self.start_month:
+            d["start_month"] = self.start_month
+        if self.end_year:
+            d["end_year"] = self.end_year
+        if self.end_month:
+            d["end_month"] = self.end_month
+        if self.summary:
+            d["summary"] = self.summary
+        if self.title :
+            d["title"] = self.title
+        if self.organization:
+            d["organization"] = self.organization
+        
+        return d
