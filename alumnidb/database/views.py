@@ -61,7 +61,7 @@ def add_sse_position(request, user_id):
             position = form.save(commit=False)
             position.user = user
             position.save()
-            return HttpResponseRedirect('/db/profile/')
+            return HttpResponseRedirect('/db/profile/%d/' % user.pk)
     else:
         form = SSEPositionForm()
 
@@ -83,7 +83,7 @@ def edit_sse_position(request, user_id, position_id):
             position = form.save(commit=False)
             position.user = user
             position.save()
-            return HttpResponseRedirect('/db/profile/')
+            return HttpResponseRedirect('/db/profile/%d/' % user.pk)
     else:
         form = SSEPositionForm(instance=position)
 
