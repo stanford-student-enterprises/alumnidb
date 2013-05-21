@@ -36,6 +36,8 @@ def my_profile(request):
 
 def edit_profile(request):
     user = request.user
+    if request.user.is_superuser:
+        return admin_edit_profile(request, user.pk)
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user)

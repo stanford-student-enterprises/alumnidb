@@ -41,8 +41,8 @@
         {% if user.sse_email %}
             <li><strong>SSE Email: </strong>{{ user.sse_email }}</li>
         {% endif %}
-        {% if user.email %}
-            <li><strong>Email: </strong>{{ user.email}}</li>
+        {% if user.primary_email %}
+            <li><strong>Email: </strong>{{ user.primary_email}}</li>
         {% endif %}
             <br />
         {% if sse_positions %}

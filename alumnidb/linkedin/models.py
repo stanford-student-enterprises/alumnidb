@@ -48,6 +48,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     picture_url = models.CharField(max_length=255, blank=True, null=True)
     headline = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
+    personal_email = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=255, blank=True, null=True)
     sse_email = models.CharField(max_length=255, blank=True, null=True, verbose_name="SSE Email")
     is_current = models.BooleanField(default=True)
@@ -64,11 +65,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         if self.is_current:
             if self.sse_email:
                 return self.sse_email
+            elif self.personal_email:
+                return self.personal_email
             else:
                 return self.email
         else:
+            if self.personal_email:
+                return self.personal_email
             return self.email
-        return None
 
     def last_sse_position(self):
         sse_positions = SSEPosition.objects.filter(user=self).order_by("-start_year")
