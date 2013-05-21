@@ -50,9 +50,9 @@
                 <ul class="unstyled">
                     {% for position in sse_positions %}
                         <li>{{ position.title }}, {{ position.start_year }} - {{ position.end_year }}&nbsp;
-                            <a href="/db/profile/{{ request.user.pk }}/sse_positions/{{ position.pk }}/edit/">Edit</a>
+                            <a href="/db/profile/{{ user.pk }}/sse_positions/{{ position.pk }}/edit/">Edit</a>
                             &nbsp;
-                            <a href="/db/profile/{{ request.user.pk }}/sse_positions/{{ position.pk }}/delete/">Delete</a>
+                            <a href="/db/profile/{{ user.pk }}/sse_positions/{{ position.pk }}/delete/">Delete</a>
                         </li>
                     {% endfor %}
                 </ul>
