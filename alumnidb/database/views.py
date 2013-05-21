@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 
-from alumnidb.linkedin.models import UserProfile, SSEPosition
+from alumnidb.linkedin.models import UserProfile, SSEPosition, Experience
 from alumnidb.linkedin.forms import UserProfileForm, AdminUserProfileForm, SSEPositionForm
 
 def home(request):
@@ -28,12 +28,7 @@ def current(request):
 def my_profile(request):
     user = request.user
 
-    sse_positions = SSEPosition.objects.filter(user=user).order_by("-start_year")
-
-    return render_to_response("database/profile.html", 
-                            {"user": user,
-                            "sse_positions": sse_positions}, 
-                            context_instance=RequestContext(request))
+    return profile(request, user.pk)
 
 def edit_profile(request):
     user = request.user
@@ -67,6 +62,28 @@ def add_sse_position(request, user_id):
                             {"form": form},
                             context_instance=RequestContext(request))
 
+def edit_sse_position(request, user_id, position_id):
+    user = get_object_or_404(UserProfile, pk=int(user_id))
+    position = get_object_or_404(SSEPosition, pk=int(position_id))
+    if user != request.user and not request.user.is_superuser:
+        return HttpResponse(status=401)
+    if position.user != user:
+        return HttpResponse(status=401)
+
+    if request.method == 'POST':
+        form = SSEPositionForm(request.POST, instance=position)
+        if form.is_valid():
+            position = form.save(commit=False)
+            position.user = user
+            position.save()
+            return HttpResponseRedirect('/db/profile/')
+    else:
+        form = SSEPositionForm(instance=position)
+
+    return render_to_response("database/edit_sse_position.html", 
+                            {"form": form},
+                            context_instance=RequestContext(request))
+
 def admin_edit_profile(request, user_id):
     user = get_object_or_404(UserProfile, pk=int(user_id))
     if not request.user.is_superuser:
@@ -86,10 +103,12 @@ def profile(request, user_id):
     user = get_object_or_404(UserProfile, pk=user_id)
 
     sse_positions = SSEPosition.objects.filter(user=user).order_by("-start_year")
+    experiences = Experience.objects.filter(user=user)
 
     return render_to_response("database/profile.html", 
                             {"user": user,
-                            "sse_positions": sse_positions}, 
+                            "sse_positions": sse_positions,
+                            "experiences": experiences}, 
                             context_instance=RequestContext(request))
 
 def search(request):

@@ -49,7 +49,17 @@
             <li><strong>SSE Positions</strong>
                 <ul class="unstyled">
                     {% for position in sse_positions %}
-                        <li>{{ position.title }}, {{ position.start_year }} - {{ position.end_year }}</li>
+                        <li>{{ position.title }}, {{ position.start_year }} - {{ position.end_year }}&nbsp;<a href="/db/profile/{{ request.user.pk }}/sse_positions/{{ position.pk }}/edit/">Edit</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endif %}
+        <br />
+        {% if experiences %}
+            <li><strong>Resume</strong>
+                <ul class="unstyled">
+                    {% for experience in experiences %}
+                        <li>{{ experience.title }}, {{ experience.organization }} {{ experience.start_year }} - {{ experience.end_year }}</li>
                     {% endfor %}
                 </ul>
             </li>
