@@ -84,6 +84,18 @@ def edit_sse_position(request, user_id, position_id):
                             {"form": form},
                             context_instance=RequestContext(request))
 
+def delete_sse_position(request, user_id, position_id):
+    user = get_object_or_404(UserProfile, pk=int(user_id))
+    position = get_object_or_404(SSEPosition, pk=int(position_id))
+    if user != request.user and not request.user.is_superuser:
+        return HttpResponse(status=401)
+    if position.user != user:
+        return HttpResponse(status=401)
+
+    position.delete()
+
+    return HttpResponseRedirect("/db/profile/%d/" % user.pk)
+
 def admin_edit_profile(request, user_id):
     user = get_object_or_404(UserProfile, pk=int(user_id))
     if not request.user.is_superuser:
