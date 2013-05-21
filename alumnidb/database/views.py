@@ -5,6 +5,7 @@ from django.db.models import Q
 
 from alumnidb.linkedin.models import UserProfile, SSEPosition, Experience
 from alumnidb.linkedin.forms import UserProfileForm, AdminUserProfileForm, SSEPositionForm
+from alumnidb.database.forms import FilterForm
 
 def home(request):
     return render_to_response("database/home.html")
@@ -151,3 +152,37 @@ def search(request):
     
     return render_to_response("database/list.html", {"users": results, "title": "Search results for '%s'" % q},
                             context_instance=RequestContext(request))
+
+def filter(request):
+    results = {}
+    if request.method == 'POST':
+        form = FilterForm(request.POST)
+        if form.is_valid():
+            is_current_results = set()
+            q_object = Q()
+            if form.is_current and not form.is_not_current:
+                q_object.add(Q(is_current=True), Q.AND)
+            elif not form.is_current and form.is_not_current:
+                q_object.add(Q(is_current=False), Q.AND)
+            is_current_results |= UserProfile.objects.filter(q_object)
+
+            year_results = set()
+            q_object = Q()
+            if form.start_year:
+                q_object.add(Q(start_year__lte=form.start_year), Q.AND)
+            if form.end_year:
+                q_object.add(Q(end_year__gte=form.end_year), Q.AND)
+            sse_positions = SSEPosition.objects.filter(q_object)
+            for position in sse_positions:
+                year_results.add(position.user)
+
+            results &= is_current_results
+            results &= year_results
+    else:
+        form = FilterForm()
+
+    return render_to_response("database/filter.html", 
+                            {"users": results,
+                            "form": form},
+                            context_instance=RequestContext(request))
+

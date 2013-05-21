@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import simplejson
 from django.core import serializers
+from django.conf import settings
 
 class LinkedInUserManager(BaseUserManager):
     def create(self, linkedin_id, oauth_code):
@@ -80,9 +81,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return SSEPosition.objects.filter(user=self).order_by("-start_year")
 
 class SSEPosition(models.Model):
-    YEAR_CHOICES = [("%d" % y, "%d" % y) for y in range(2001, 2025)]
-    start_year = models.CharField(max_length=4, choices=YEAR_CHOICES)
-    end_year = models.CharField(max_length=4, choices=YEAR_CHOICES)
+    start_year = models.CharField(max_length=4, choices=settings.YEAR_CHOICES)
+    end_year = models.CharField(max_length=4, choices=settings.YEAR_CHOICES)
     title = models.CharField(max_length=255)
     user = models.ForeignKey("UserProfile")
 

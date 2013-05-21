@@ -14,6 +14,9 @@ LOGIN_URL = '/linkedin/authenticate/'
 LINKEDIN_CLIENT_ID = "ppryv46gee03"
 LINKEDIN_SECRET_KEY = "nAJjHkT7pvHKPNet"
 
+YEAR_CHOICES = [("%d" % y, "%d" % y) for y in range(2001, 2025)]
+
+
 MANAGERS = ADMINS
 
 DATABASES = {

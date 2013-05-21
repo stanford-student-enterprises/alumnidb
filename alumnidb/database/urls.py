@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 
 
 urlpatterns = patterns('alumnidb.database.views',
+    url(r'filter/$', 'filter'),
     url(r'profile/edit/$', 'edit_profile'),
     url(r'profile/all/$', 'all'),
     url(r'profile/current/$', 'current'),
