@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import Q
 
 from alumnidb.linkedin.models import UserProfile, SSEPosition, Experience
@@ -11,7 +11,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 def home(request):
-    return render_to_response("database/home.html")
+    return render_to_response("database/home.html",
+                            context_instance=RequestContext(request))
 
 def all(request):
     users = UserProfile.objects.all().order_by("last_name")
@@ -159,6 +160,9 @@ def search(request):
                             context_instance=RequestContext(request))
 
 def filter(request):
+    if not request.user.is_superuser:
+        return HttpResponse(status=401)
+
     results = set()
     logger.debug("Test")
     if request.method == 'POST':
